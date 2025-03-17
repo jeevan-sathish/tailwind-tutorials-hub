@@ -1,5 +1,15 @@
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import Prism from 'prismjs';
+import 'prismjs/themes/prism-tomorrow.css';
+import 'prismjs/components/prism-jsx';
+import 'prismjs/components/prism-tsx';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-markup';
+import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
+import 'prismjs/plugins/line-numbers/prism-line-numbers';
 
 interface CodeBlockProps {
   code: string;
@@ -8,8 +18,16 @@ interface CodeBlockProps {
 }
 
 const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'html', title }) => {
+  const codeRef = useRef<HTMLElement>(null);
+  
   // Strip any leading/trailing blank lines and normalize indentation
   const normalizedCode = code.trim();
+  
+  useEffect(() => {
+    if (codeRef.current) {
+      Prism.highlightElement(codeRef.current);
+    }
+  }, [normalizedCode, language]);
   
   return (
     <div className="rounded-lg overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover-scale theme-transition">
@@ -27,8 +45,10 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'html', title })
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
           </div>
         </div>
-        <pre className="pt-10 p-4 bg-gray-900 dark:bg-gray-950 overflow-x-auto theme-transition">
-          <code className="text-sm md:text-base text-gray-200 dark:text-gray-100 font-mono">{normalizedCode}</code>
+        <pre className="pt-10 p-4 bg-gray-900 dark:bg-gray-950 overflow-x-auto theme-transition line-numbers">
+          <code ref={codeRef} className={`language-${language} text-sm md:text-base font-mono`}>
+            {normalizedCode}
+          </code>
         </pre>
       </div>
     </div>

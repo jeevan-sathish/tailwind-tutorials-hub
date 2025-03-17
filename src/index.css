@@ -170,3 +170,143 @@
   max-width: 100%;
   width: 100%;
 }
+
+/* Custom PrismJS Theme Overrides */
+:root {
+  --prism-background: #1E1E1E;
+  --prism-comment: #6A9955;
+  --prism-string: #CE9178;
+  --prism-literal: #569CD6;
+  --prism-keyword: #569CD6;
+  --prism-function: #DCDCAA;
+  --prism-deleted: #F14C4C;
+  --prism-class: #4EC9B0;
+  --prism-builtin: #4EC9B0;
+  --prism-property: #9CDCFE;
+  --prism-namespace: #4EC9B0;
+  --prism-punctuation: #D4D4D4;
+  --prism-decorator: #BD63C5;
+  --prism-regex: #D16969;
+  --prism-variable: #9CDCFE;
+  --prism-operator: #D4D4D4;
+  --prism-selector: #D7BA7D;
+  --prism-escape: #D7BA7D;
+}
+
+.prism-tomorrow-theme {
+  --prism-background: #2d2d2d;
+  --prism-comment: #999999;
+  --prism-string: #99CC99;
+  --prism-literal: #F99157;
+  --prism-keyword: #CC99CC;
+  --prism-function: #FFCC66;
+  --prism-deleted: #f2777a;
+  --prism-class: #FFCC66;
+  --prism-builtin: #f99157;
+  --prism-property: #66CCCC;
+  --prism-namespace: #66CCCC;
+  --prism-punctuation: #CCCCCC;
+  --prism-decorator: #CC99CC;
+  --prism-regex: #f2777a;
+  --prism-variable: #6699CC;
+  --prism-operator: #CCCCCC;
+  --prism-selector: #CC99CC;
+  --prism-escape: #f99157;
+}
+
+/* Override Prism Tomorrow Theme */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--prism-comment);
+}
+
+.token.punctuation {
+  color: var(--prism-punctuation);
+}
+
+.token.namespace {
+  color: var(--prism-namespace);
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: var(--prism-property);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: var(--prism-string);
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: var(--prism-operator);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: var(--prism-keyword);
+}
+
+.token.function,
+.token.class-name {
+  color: var(--prism-function);
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: var(--prism-regex);
+}
+
+/* Custom line numbers styling */
+pre.line-numbers {
+  position: relative;
+  padding-left: 3.8em;
+  counter-reset: linenumber;
+}
+
+pre.line-numbers > code {
+  position: relative;
+  white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  font-size: 100%;
+  left: -3.8em;
+  width: 3em; /* works for line-numbers below 1000 lines */
+  letter-spacing: -1px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  user-select: none;
+}
+
+.line-numbers-rows > span {
+  display: block;
+  counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+  content: counter(linenumber);
+  color: rgba(255, 255, 255, 0.5);
+  display: block;
+  padding-right: 0.8em;
+  text-align: right;
+}
