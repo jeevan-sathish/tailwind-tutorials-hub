@@ -142,6 +142,11 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes fall {
+  0% { transform: translateY(-10vh) rotate(0deg); }
+  100% { transform: translateY(100vh) rotate(360deg); }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.4s ease-out forwards;
 }
@@ -152,6 +157,10 @@
 
 .animate-slide-down {
   animation: slideDown 0.5s ease-out forwards;
+}
+
+.animate-confetti {
+  animation: fall 3s linear infinite;
 }
 
 /* Ensure there's no root div padding that might be causing issues */

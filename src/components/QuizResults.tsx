@@ -44,7 +44,7 @@ const QuizResults: React.FC<QuizResultsProps> = ({ questions, userAnswers, reset
   };
   
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 animate-scale-in">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 p-6 animate-scale-in">
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-50">
           {/* Simple confetti effect using pseudo-elements */}
@@ -71,12 +71,12 @@ const QuizResults: React.FC<QuizResultsProps> = ({ questions, userAnswers, reset
       
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold mb-2">Quiz Results</h3>
-        <p className="text-gray-600 mb-4">{getScoreMessage()}</p>
+        <p className="text-gray-600 dark:text-gray-300 mb-4">{getScoreMessage()}</p>
         
         <div className="relative inline-block">
           <svg className="w-40 h-40" viewBox="0 0 36 36">
             <path
-              className="stroke-current text-gray-200"
+              className="stroke-current text-gray-200 dark:text-gray-700"
               fill="none"
               strokeWidth="3"
               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
@@ -88,7 +88,7 @@ const QuizResults: React.FC<QuizResultsProps> = ({ questions, userAnswers, reset
               strokeDasharray={`${score}, 100`}
               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
             />
-            <text x="18" y="20.5" className="fill-current text-3xl font-bold text-gray-700" textAnchor="middle">
+            <text x="18" y="20.5" className="fill-current text-3xl font-bold text-gray-700 dark:text-gray-300" textAnchor="middle">
               {scoreText}%
             </text>
           </svg>
@@ -153,20 +153,20 @@ const QuizResults: React.FC<QuizResultsProps> = ({ questions, userAnswers, reset
               <div
                 key={question.id}
                 className={`p-4 rounded-lg border ${
-                  isCorrect ? "border-green-100 bg-green-50" : "border-red-100 bg-red-50"
+                  isCorrect ? "border-green-100 bg-green-50 dark:border-green-800 dark:bg-green-900/20" : "border-red-100 bg-red-50 dark:border-red-800 dark:bg-red-900/20"
                 }`}
               >
                 <div className="flex justify-between">
-                  <h5 className="font-medium text-gray-900">Question {index + 1}</h5>
+                  <h5 className="font-medium text-gray-900 dark:text-gray-100">Question {index + 1}</h5>
                   <span
                     className={`text-sm font-medium ${
-                      isCorrect ? "text-green-600" : "text-red-600"
+                      isCorrect ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
                     }`}
                   >
                     {isCorrect ? "Correct" : "Incorrect"}
                   </span>
                 </div>
-                <p className="mt-1 text-gray-700">{question.question}</p>
+                <p className="mt-1 text-gray-700 dark:text-gray-300">{question.question}</p>
                 
                 <div className="mt-2 space-y-1">
                   {question.options.map((option, optionIndex) => (
@@ -174,24 +174,24 @@ const QuizResults: React.FC<QuizResultsProps> = ({ questions, userAnswers, reset
                       key={optionIndex}
                       className={`px-3 py-2 rounded-md text-sm ${
                         question.correctAnswer === optionIndex
-                          ? "bg-green-100 text-green-800"
+                          ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
                           : userAnswer === optionIndex
-                          ? "bg-red-100 text-red-800"
-                          : "bg-gray-100 text-gray-700"
+                          ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+                          : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                       }`}
                     >
                       {option}
                       {question.correctAnswer === optionIndex && (
-                        <span className="ml-2 text-green-600 font-medium">✓ Correct answer</span>
+                        <span className="ml-2 text-green-600 dark:text-green-400 font-medium">✓ Correct answer</span>
                       )}
                       {userAnswer === optionIndex && userAnswer !== question.correctAnswer && (
-                        <span className="ml-2 text-red-600 font-medium">✗ Your answer</span>
+                        <span className="ml-2 text-red-600 dark:text-red-400 font-medium">✗ Your answer</span>
                       )}
                     </div>
                   ))}
                 </div>
                 
-                <div className="mt-2 text-sm text-gray-600">
+                <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
                   <strong>Explanation:</strong> {question.explanation}
                 </div>
               </div>
@@ -203,7 +203,7 @@ const QuizResults: React.FC<QuizResultsProps> = ({ questions, userAnswers, reset
       <div className="mt-8 flex justify-center">
         <button
           onClick={resetQuiz}
-          className="px-6 py-3 bg-tailwind-blue text-white font-medium rounded-lg hover:bg-tailwind-blue/90 transition-colors"
+          className="px-6 py-3 bg-tailwind-blue text-white font-medium rounded-lg hover:bg-tailwind-blue/90 transition-colors button-glow"
         >
           Try Again
         </button>

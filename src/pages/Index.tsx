@@ -7,16 +7,16 @@ import Footer from '@/components/Footer';
 import { useState } from 'react';
 import QuizTimer from '@/components/QuizTimer';
 import QuizResults from '@/components/QuizResults';
-import { quizData } from '@/data/quizData';
+import { quizQuestions } from '@/data/quizData';
 
 const Index = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<(string | null)[]>(Array(quizData.length).fill(null));
+  const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(Array(quizQuestions.length).fill(null));
   const [showResults, setShowResults] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
   const [timeExpired, setTimeExpired] = useState(false);
 
-  const handleAnswerSelect = (answer: string) => {
+  const handleAnswerSelect = (answer: number) => {
     if (selectedAnswers[currentQuestion] === null) {
       const newAnswers = [...selectedAnswers];
       newAnswers[currentQuestion] = answer;
@@ -31,7 +31,7 @@ const Index = () => {
   };
 
   const handleNextQuestion = () => {
-    if (currentQuestion < quizData.length - 1) {
+    if (currentQuestion < quizQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       setShowResults(true);
@@ -41,7 +41,7 @@ const Index = () => {
   const handleStartQuiz = () => {
     setQuizStarted(true);
     setCurrentQuestion(0);
-    setSelectedAnswers(Array(quizData.length).fill(null));
+    setSelectedAnswers(Array(quizQuestions.length).fill(null));
     setShowResults(false);
     setTimeExpired(false);
   };
@@ -52,7 +52,7 @@ const Index = () => {
   };
 
   const score = selectedAnswers.filter((answer, index) => 
-    answer === quizData[index].correctAnswer
+    answer === quizQuestions[index].correctAnswer
   ).length;
 
   return (
@@ -82,7 +82,7 @@ const Index = () => {
               <div className="max-w-2xl mx-auto glass-card p-8 rounded-xl text-center">
                 <h3 className="text-2xl font-semibold mb-4">Ready to test your Tailwind CSS knowledge?</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  This quiz has {quizData.length} questions to test your understanding of Tailwind CSS concepts.
+                  This quiz has {quizQuestions.length} questions to test your understanding of Tailwind CSS concepts.
                   You'll have 5 minutes to complete all questions.
                 </p>
                 <button 
@@ -98,24 +98,24 @@ const Index = () => {
               <div className="max-w-3xl mx-auto glass-card p-8 rounded-xl">
                 <div className="flex justify-between items-center mb-6">
                   <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Question {currentQuestion + 1} of {quizData.length}
+                    Question {currentQuestion + 1} of {quizQuestions.length}
                   </div>
                   <QuizTimer 
-                    duration={300} 
-                    onTimeExpired={handleTimeExpired} 
-                    isActive={quizStarted && !showResults} 
+                    isRunning={quizStarted && !showResults}
+                    onTimeUp={handleTimeExpired}
+                    totalTime={300}
                   />
                 </div>
                 
-                <h3 className="text-xl font-semibold mb-4">{quizData[currentQuestion].question}</h3>
+                <h3 className="text-xl font-semibold mb-4">{quizQuestions[currentQuestion].question}</h3>
                 
                 <div className="space-y-3 mb-8">
-                  {quizData[currentQuestion].options.map((option, index) => (
+                  {quizQuestions[currentQuestion].options.map((option, index) => (
                     <div 
                       key={index}
-                      onClick={() => handleAnswerSelect(option)}
+                      onClick={() => handleAnswerSelect(index)}
                       className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
-                        selectedAnswers[currentQuestion] === option
+                        selectedAnswers[currentQuestion] === index
                           ? 'border-tailwind-blue bg-tailwind-blue/10 dark:bg-tailwind-blue/20'
                           : 'border-gray-200 dark:border-gray-700 hover:border-tailwind-blue hover:bg-gray-50 dark:hover:bg-gray-800'
                       }`}
@@ -141,7 +141,7 @@ const Index = () => {
                     onClick={handleNextQuestion}
                     className="bg-tailwind-blue text-white py-2 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors button-glow"
                   >
-                    {currentQuestion < quizData.length - 1 ? 'Next' : 'Finish Quiz'}
+                    {currentQuestion < quizQuestions.length - 1 ? 'Next' : 'Finish Quiz'}
                   </button>
                 </div>
               </div>
@@ -149,12 +149,9 @@ const Index = () => {
             
             {showResults && (
               <QuizResults 
-                score={score} 
-                totalQuestions={quizData.length} 
-                selectedAnswers={selectedAnswers} 
-                questions={quizData}
-                onRestartQuiz={handleStartQuiz}
-                timeExpired={timeExpired}
+                questions={quizQuestions}
+                userAnswers={selectedAnswers}
+                resetQuiz={handleStartQuiz}
               />
             )}
           </div>
