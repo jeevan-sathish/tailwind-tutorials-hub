@@ -1,12 +1,167 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import Header from '@/components/Header';
+import HeroSection from '@/components/HeroSection';
+import DocumentSection from '@/components/DocumentSection';
+import TutorialSection from '@/components/TutorialSection';
+import Footer from '@/components/Footer';
+import { useState } from 'react';
+import QuizTimer from '@/components/QuizTimer';
+import QuizResults from '@/components/QuizResults';
+import { quizData } from '@/data/quizData';
 
 const Index = () => {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState<(string | null)[]>(Array(quizData.length).fill(null));
+  const [showResults, setShowResults] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [timeExpired, setTimeExpired] = useState(false);
+
+  const handleAnswerSelect = (answer: string) => {
+    if (selectedAnswers[currentQuestion] === null) {
+      const newAnswers = [...selectedAnswers];
+      newAnswers[currentQuestion] = answer;
+      setSelectedAnswers(newAnswers);
+    }
+  };
+
+  const handlePrevQuestion = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestion < quizData.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    } else {
+      setShowResults(true);
+    }
+  };
+
+  const handleStartQuiz = () => {
+    setQuizStarted(true);
+    setCurrentQuestion(0);
+    setSelectedAnswers(Array(quizData.length).fill(null));
+    setShowResults(false);
+    setTimeExpired(false);
+  };
+
+  const handleTimeExpired = () => {
+    setTimeExpired(true);
+    setShowResults(true);
+  };
+
+  const score = selectedAnswers.filter((answer, index) => 
+    answer === quizData[index].correctAnswer
+  ).length;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      
+      <main className="flex-grow">
+        <HeroSection />
+        
+        <section id="documentation" className="py-16">
+          <div className="container mx-auto px-4">
+            <DocumentSection />
+          </div>
+        </section>
+        
+        <section id="tutorials" className="py-16 bg-gray-50 dark:bg-gray-900 theme-transition">
+          <div className="container mx-auto px-4">
+            <TutorialSection />
+          </div>
+        </section>
+        
+        <section id="quiz" className="py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-12 gradient-text">Test Your Tailwind Knowledge</h2>
+            
+            {!quizStarted && !showResults && (
+              <div className="max-w-2xl mx-auto glass-card p-8 rounded-xl text-center">
+                <h3 className="text-2xl font-semibold mb-4">Ready to test your Tailwind CSS knowledge?</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
+                  This quiz has {quizData.length} questions to test your understanding of Tailwind CSS concepts.
+                  You'll have 5 minutes to complete all questions.
+                </p>
+                <button 
+                  onClick={handleStartQuiz}
+                  className="button-glow bg-tailwind-blue text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-all duration-300"
+                >
+                  Start Quiz
+                </button>
+              </div>
+            )}
+            
+            {quizStarted && !showResults && (
+              <div className="max-w-3xl mx-auto glass-card p-8 rounded-xl">
+                <div className="flex justify-between items-center mb-6">
+                  <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Question {currentQuestion + 1} of {quizData.length}
+                  </div>
+                  <QuizTimer 
+                    duration={300} 
+                    onTimeExpired={handleTimeExpired} 
+                    isActive={quizStarted && !showResults} 
+                  />
+                </div>
+                
+                <h3 className="text-xl font-semibold mb-4">{quizData[currentQuestion].question}</h3>
+                
+                <div className="space-y-3 mb-8">
+                  {quizData[currentQuestion].options.map((option, index) => (
+                    <div 
+                      key={index}
+                      onClick={() => handleAnswerSelect(option)}
+                      className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
+                        selectedAnswers[currentQuestion] === option
+                          ? 'border-tailwind-blue bg-tailwind-blue/10 dark:bg-tailwind-blue/20'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-tailwind-blue hover:bg-gray-50 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      {option}
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="flex justify-between">
+                  <button
+                    onClick={handlePrevQuestion}
+                    disabled={currentQuestion === 0}
+                    className={`py-2 px-6 rounded-lg font-medium ${
+                      currentQuestion === 0
+                        ? 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                        : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200'
+                    }`}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={handleNextQuestion}
+                    className="bg-tailwind-blue text-white py-2 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors button-glow"
+                  >
+                    {currentQuestion < quizData.length - 1 ? 'Next' : 'Finish Quiz'}
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {showResults && (
+              <QuizResults 
+                score={score} 
+                totalQuestions={quizData.length} 
+                selectedAnswers={selectedAnswers} 
+                questions={quizData}
+                onRestartQuiz={handleStartQuiz}
+                timeExpired={timeExpired}
+              />
+            )}
+          </div>
+        </section>
+      </main>
+      
+      <Footer />
     </div>
   );
 };
